@@ -1,0 +1,431 @@
+@import url(//fonts.googleapis.com/css?family=Ubuntu);
+@font-face {
+    font-family: 'Trattatello';
+    src: url('fonts/Trattatello.woff2') format('woff2'),
+         url('fonts/Trattatello.woff') format('woff'),
+         url('fonts/Trattatello.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+body {
+    margin:0;
+    padding:0;
+    font-family:helvetica, sans-serif;
+       z-index: 0;
+}
+
+h1, h2, h3, h4, h5 , h6 {
+    font-family: 'Ubuntu', sans-serif; font-weight:normal;
+}
+
+a {
+    text-decoration:none;
+    color:#5993bb;
+}
+
+a:hover {
+    color:#77b6e2;
+}
+
+a.button, input[type="submit"] {
+    color:#fff;
+    background:#5993bb;
+    border-radius:4px;
+    padding:10px 20px;
+    font-size:14px;
+    border:0;
+}
+
+a.button.light {
+    color:#666;
+    background:#ededed;
+}
+
+.text-left {
+    text-align:left;
+}
+
+.text-right {
+    text-align:right;
+}
+
+table {
+    width:100%;
+    border-spacing:0;
+    border-collapse: collapse;
+       z-index: 0;
+}
+
+table th, table td {
+    text-align:left;
+    font-size:14px;
+    padding:10px;
+    margin:0;
+}
+
+tbody tr:nth-child(odd) {
+    background:#efefef;
+}
+
+tbody tr.subtotal {
+    background:#ccc;
+}
+
+thead th, tbody tr.total {
+    background:#5993bb;
+    color:#fff;
+    font-weight:bold;
+}
+
+table.cart {
+    margin-bottom:40px;
+}
+
+table.cart img {
+    width:180px;
+}
+
+tbody td.num {
+    text-align:right;
+}
+
+td input[type="submit"] {
+    font-size:12px;
+    padding:4px 10px;
+}
+
+form p label, form p input {
+    float:left;
+    clear:both;
+}
+
+form p label {
+    font-size:14px;
+    padding-bottom:4px;
+}
+
+form p input {
+    width:300px;
+    font-size:13px;
+    margin-bottom:10px;
+    padding:10px 12px;
+    border:0;
+    background:#efefef;
+    color:#666;
+    border-radius:4px;
+}
+
+ul.errorlist {
+   float:left;
+   color:#ff0000;
+   clear:both;
+   font-size:13px;
+   margin:0 0 0 10px;
+   padding:10px 0;
+}
+
+#header {
+
+    position: fixed;
+    padding: 10px 100px;
+    font-size: 18px;
+    overflow: auto;
+    z-index: 2000; /* Нижний z-index для других элементов */
+
+}
+
+#subheader {
+  z-index: 2000;
+ top:0;
+ position: fixed!important;
+    background: #98FB98; /* Цвет фона меню */
+    padding: 1px;
+    text-align: left;
+
+    left: 0; /* Прижимаем к левому краю */
+    width: 100%; /* Ширина на всю страницу */
+    /* Чтобы меню было поверх других элементов */
+
+}
+
+#subheader a {
+    text-align:left;
+    color: black; /* Цвет текста */
+    text-decoration: none; /* Убираем подчёркивание */
+    font-size: 16px; /* Размер шрифта */
+    margin-top:3px;
+    display: inline-block; /* Делаем ссылки блочными, но в строке */
+    transition: background 0.3s, color 0.3s; /* Плавные переходы */
+    margin-left:6%;
+
+}
+#subheader .logo {
+ margin-left:3px;
+    font-family: "Orbitron", serif;
+  font-optical-sizing: auto;
+  font-weight: <weight>;
+  font-style: normal;
+
+
+}
+
+#header .logo {
+    font-family: 'Ubuntu', sans-serif;
+    float:left;
+    color:#333;
+    font-size:22px;
+    margin-right:10%;
+
+}
+
+#subheader .cart {
+    float:right;
+
+}
+
+#content {
+
+    padding:0 100px;
+    overflow:hidden;
+     z-index:0;
+
+}
+
+#sidebar {
+
+    width:220px;
+    padding:30px 20px 0 0;
+    float:left;
+      height: 100vh;  /* Растягиваем до нижнего края родителя */
+}
+
+#sidebar ul{
+    margin:0;
+    padding:0;
+}
+
+#sidebar ul li {
+    margin:0;
+    list-style:none;
+    padding:10px 14px;
+}
+
+#sidebar ul li a {
+    display:block;
+}
+
+#sidebar ul li.selected {
+    background:#5993bb;
+    border-radius:4px;
+}
+
+#sidebar ul li.selected a {
+    color:#fff;
+}
+
+#main {
+    float:left;
+    width: 96%;
+    margin-right:-220px;
+    overflow:hidden;
+     z-index:0;
+}
+
+.product-list .item {
+    width:320px;
+    padding:10px 20px 10px 0;
+    float:left;
+    text-align:center;
+    line-height:1.2;
+     background:#d1f1c8;
+       margin-left:10px;
+      margin-bottom:8px;
+      transition: transform .6s ease;
+       z-index: 0;
+}
+.product-list .item:hover {
+  transform: scale(1.05);
+}
+.product-list .item img {
+    width:300px;
+    height: 200px;
+    margin-left: 10px;
+
+    margin-bottom:8px;
+}
+.product-list .item a{
+ color :#2E8B57;
+}
+.product-detail {
+    text-align:justify;
+}
+
+.product-detail .price {
+    color:#333;
+    font-size:28px;
+    font-weight:bold;
+}
+
+.product-detail img {
+    width:40%;
+    float:left;
+    padding:0 20px 20px 0;
+    margin-top:10px;
+}
+
+.product-detail h1 {
+    margin-bottom:0;
+}
+
+.product-detail h2 {
+    margin-top:10px;
+}
+
+.order-form {
+    float:left;
+}
+
+.order-info {
+    float:right;
+    width:300px;
+    background:#efefef;
+    padding:10px 20px;
+    color:#333;
+    border-bottom:4px solid #5993bb;
+}
+
+.order-info h3 {
+    color:#5993bb;
+}
+
+.order-info ul li {
+    margin:0;
+    padding:0;
+    font-size:14px;
+}
+
+.order-info p {
+    font-weight:bold;
+    float:right;
+}
+
+.order-info span {
+    float:right;
+}
+
+.neg {
+    color:#dc1616;
+}
+
+.languages {
+   float:right;
+   padding-top:4px;
+   font-size:14px;
+}
+
+.languages ul {
+    list-style:none;
+    margin:0;
+    padding:0;
+    float:left;
+}
+
+.languages ul li {
+    float:left;
+    margin:0 0 0 10px;
+    font-size:14px;
+}
+
+.languages p {
+    float:left;
+    margin:0;
+}
+
+.recommendations {
+    clear:both;
+}
+
+.recommendations div {
+    float:left;
+}
+
+.recommendations img {
+    width:200px
+}
+
+.recommendations p {
+    clear:both;
+}
+
+.recommendations.cart {
+    width:60%;
+    float:left;
+    overflow:auto;
+}
+
+.recommendations.cart h3 {
+    margin-top:0;
+}
+
+.recommendations.cart .item {
+    margin-right:10px;
+}
+
+.recommendations.cart img {
+    width:120px;
+}
+
+/* braintree hosted fields */
+form div.field {
+    font-size:13px;
+    color:#666;
+    width:300px;
+    height:22px;
+    margin-bottom:10px;
+    padding:6px 12px;
+    border:0;
+    background:#efefef;
+    color:#666;
+    border-radius:4px;
+}
+
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+  z-index: 2000; /* Ensure the dropdown container is above other elements */
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 12px 16px;
+  z-index: 2001; /* Ensure the dropdown content is above the container */
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+  z-index: 2001; /* Ensure the dropdown content remains above when displayed */
+}
+.dropdown:hover .dropdown-content a{
+  color:#5993bb;
+}
+#header, .cart, #content {
+  position: relative;
+  z-index: 10; /* Lower z-index for other elements */
+}
+
+.video{
+
+position: absolute;
+ padding-top: 5%;
+   z-index: 1000;
+  margin-left: 30%;
+  margin-right: auto;
+    float:left;
+    width=560px ;
+    height=315px;
+}

@@ -1,0 +1,56 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+
+ {% if category %}{{ category.name }}{% else %}Products{% endif %}
+
+
+{% endblock %}
+{% block content %}
+ <div id="sidebar">
+ <h3>Categories</h3>
+ <ul>
+ <li {% if not category %}{% endif %}>
+
+ <a href="{% url 'shop:product_list' %}" button type="button" class="btn btn-outline-success">All</a>
+
+ </li>
+ {% for c in categories %}
+ <li {% if category.slug == c.slug %} {% endif %}>
+ <a href="{{ c.get_absolute_url }}" button type="button" class="btn btn-outline-success">{{ c.name }}</a>
+
+ </li>
+ {% endfor %}
+     <li>
+      <div class="dropdown">
+      <a>Контакты</a>
+      <div class="dropdown-content">
+          <a href="https://vk.com/babynigaa">Вконтакте</a>
+        <a>телефон: 88005553535</a>
+
+      </div>
+    </div>
+     </li>
+ </ul>
+ </div>
+ <div id="main" class="product-list">
+
+ <h1>{% if category %}{{ category.name }}{% else %}Products {% endif %}</h1>
+
+
+
+
+{% for product in products %}
+    <div class="item">
+        <a href="{{ product.get_absolute_url }}">
+            <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'shop/img/no_image.png' %}{% endif %}">
+        </a>
+        <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+        <br>
+        ${{ product.price }}
+    </div>
+{% empty %}
+    <p>No products available.</p>
+{% endfor %}
+ </div>
+{% endblock %}
