@@ -1,6 +1,15 @@
+from django.utils import timezone
+
+
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+
+from django.contrib.auth.hashers import make_password
 from django.db import models
 from django.urls import reverse
-
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.core.exceptions import ValidationError
 # Create your models here.
 class Category(models.Model):
 
@@ -53,3 +62,17 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+
+
+
+
+
+
+class Reg(AbstractUser):
+    # Дополнительные поля, если нужны
+    pass
+
+    class Meta:
+        verbose_name = 'User'
+        verbose_name_plural = 'Users'

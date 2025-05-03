@@ -4,6 +4,10 @@
  <head>
  <meta charset="utf-8" />
  <title>{% block title %}My shop{% endblock %}</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-tools/1.2.7/jquery.tools.min.js">
+</script>
+
  <link href="{% static 'shop/css/base.css' %}" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,13 +27,25 @@
     <a>Оплата</a>
       <a href="{% url 'shop:video' %}">Видеовизитка</a>
 
+      <span class="user">
+
+
+{% if user.is_authenticated and user.first_name %}
+    <a>Welcome {{ user.first_name }}!</a>
+{% else %}
+    <a>Welcome, Guest!</a>
+{% endif %}
+ <a href="{% url 'shop:register' %}">Log-in</a>
+
+ </span>
+
 
 
     <div class="cart">
       <a>Your cart is empty.</a>
          </div>
     </div>
-  </div>
+
  {% block video %}
     {% endblock %}
   <div id="content">
