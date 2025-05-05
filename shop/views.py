@@ -19,6 +19,10 @@ from .models import Reg
 from django.contrib.auth.decorators import login_required
 
 User = get_user_model()
+
+
+
+
 def product_list(request, category_slug=None):
     category = None
     categories = Category.objects.all()
@@ -47,8 +51,11 @@ def product_detail(request, id, slug):
      'shop/product/detail.html',
      {'product': product})
 
+
 def video(request):
     return render(request, 'shop/video.html')
+def log_form(request):
+    return render(request, 'registration/loggedout.html')
 
 def register_done(request):
     if request.method == 'POST':

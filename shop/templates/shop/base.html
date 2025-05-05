@@ -15,7 +15,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
  </head>
  <body>
+ {% load static %}
   <div id="header">
+
     <a href="/" class="logo">My shop</a>
   </div>
 
@@ -29,13 +31,16 @@
 
       <span class="user">
 
+{% if request.user.is_authenticated %}
+    <a>Welcome, {{ request.user.username }}!</a>
+          <a href="{% url 'shop:logout_form' %}">Logout</a>
 
-{% if user.is_authenticated and user.first_name %}
-    <a>Welcome {{ user.first_name }}!</a>
+
 {% else %}
     <a>Welcome, Guest!</a>
+           <a href="{% url 'shop:register' %}">Log-in</a>
 {% endif %}
- <a href="{% url 'shop:register' %}">Log-in</a>
+
 
  </span>
 

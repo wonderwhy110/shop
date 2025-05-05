@@ -32,20 +32,7 @@
       box-sizing: border-box;
   }
 
-  button[type="submit"] {
-      background-color: #4CAF50;
-      color: white;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
-      margin-top: 10px;
-  }
 
-  button[type="submit"]:hover {
-      background-color: #45a049;
-  }
 
   .helptext {
       font-size: 12px;
@@ -95,7 +82,7 @@
 
 <div class="form-group">
  <label for="id_password">Password</label>
-  <input type="text"
+  <input type="password"
          id="id_password"
          name="password"
          class="form-control"
@@ -105,9 +92,10 @@
 </div>
 
 
-    <button type="submit">Register</button>
+    <button type="submit" >Register</button>
   </form>
 </div>
+<p> Already have an accaount? <a href="{% url 'shop:login' %}">log in</a>. </p>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-tools/1.2.7/jquery.tools.min.js"></script>
