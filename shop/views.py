@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
-
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
 from .models import Category, Product
 from .forms import  UserRegistrationForm
 from django.http import HttpResponse
@@ -140,3 +141,22 @@ def user_login(request):
      else:
          form = LoginForm()
      return render(request, 'shop/login.html', {'form': form})
+
+
+
+@login_required
+@require_POST
+def prod_like(request):
+    image_id = request.POST.get('id')
+    action = request.POST.get('action')
+    if image_id and action:
+        try:
+            product = Product.objects.get(id=image_id)
+            if action == 'like':
+                product.users_like.add(request.user)
+            else:
+                product.users_like.remove(request.user)
+            return JsonResponse({'status': 'ok'})
+        except Product.DoesNotExist:
+            return JsonResponse({'status': 'error'})
+    return JsonResponse({'status': 'error'})

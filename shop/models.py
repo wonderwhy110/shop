@@ -10,6 +10,11 @@ from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.core.exceptions import ValidationError
+
+from django.conf import settings
+
+
+
 # Create your models here.
 class Category(models.Model):
 
@@ -46,6 +51,11 @@ class Product(models.Model):
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    users_like = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='products_liked',
+        blank=True
+    )
 
     def get_absolute_url(self):
         return reverse('shop:product_detail',

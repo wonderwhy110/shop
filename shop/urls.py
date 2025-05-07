@@ -9,6 +9,7 @@ path('', views.product_list, name='product_list'),  # Все продукты
 path('login/', auth_views.LoginView.as_view(), name='login'),
 path('register/', views.register, name='register'),
 path('register_done/', views.register_done, name='register_done'),
+path('like/', views.prod_like, name='like'),
 
 path('video/', views.video, name='video'),
 

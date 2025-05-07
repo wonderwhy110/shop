@@ -1,19 +1,34 @@
 {% extends "shop/base.html" %}
 {% load static %}
 {% block title %}
- {{ product.name }}
+    {{ product.name }}
 {% endblock %}
 {% block content %}
- <div class="product-detail">
- <img src="{% if product.image %}{{ product.image.url }}{% else %}
- {% static 'shop/img/no_image.png' %}{% endif %}">
- <h1>{{ product.name }}</h1>
- <h2>
- <a href="{{ product.category.get_absolute_url }}">
- {{ product.category }}
- </a>
- </h2>
- <p class="price">${{ product.price }}</p>
- {{ product.description|linebreaks }}
- </div>
+    <div class="product-detail">
+        <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'shop/img/no_image.png' %}{% endif %}">
+        <h1>{{ product.name }}</h1>
+        <h2>
+            <a href="{{ product.category.get_absolute_url }}">
+                {{ product.category }}
+            </a>
+        </h2>
+        <p class="price">${{ product.price }}</p>
+        {{ product.description|linebreaks }}
+    </div>
+
+    {% with total_likes=product.users_like.count users_like=product.users_like.all %}
+      {% csrf_token %}
+
+
+<a href="#" data-id="{{ product.id }}" data-action="{% if request.user in product.users_like.all %}un{% endif %}like" class="like button">
+    {% if request.user not in product.users_like.all %}
+        Like
+    {% else %}
+        Unlike
+    {% endif %}
+</a>
+<p>Total likes: {{ product.users_like.count }}</p>
+<span class="total">{{ product.users_like.count }}</span>
+like{{ product.users_like.count|pluralize }}
+    {% endwith %}
 {% endblock %}

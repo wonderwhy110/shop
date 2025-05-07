@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const errorUsername = document.getElementById('error-username');
     const errorEmail = document.getElementById('error-email');
     const errorPassword = document.getElementById('error-password1');
-
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     // Паттерны для валидации
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])/;
@@ -125,4 +125,39 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+});
+
+
+
+const url = '{% url "shop:like" %}';
+var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+var options = {
+    method: 'POST',
+    headers: {'X-CSRFToken': csrftoken},
+    mode: 'same-origin'
+}
+
+document.querySelector('a.like').addEventListener('click', function(e){
+    e.preventDefault();
+    var likeButton = this;
+
+    var formData = new FormData();
+    formData.append('id', likeButton.dataset.id);
+    formData.append('action', likeButton.dataset.action);
+    options['body'] = formData;
+
+    fetch(url, options)
+        .then(response => response.json())
+        .then(data => {
+            if (data['status'] === 'ok') {
+                var previousAction = likeButton.dataset.action;
+                var action = previousAction === 'like' ? 'unlike' : 'like';
+                likeButton.dataset.action = action;
+                likeButton.innerHTML = action === 'like' ? 'Unlike' : 'Like';
+
+                var likeCount = document.querySelector('span.total');
+                var totalLikes = parseInt(likeCount.textContent.trim());
+                likeCount.innerHTML = previousAction === 'like' ? totalLikes + 1 : totalLikes - 1;
+            }
+        })
 });
