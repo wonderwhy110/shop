@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
-
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
 from .models import Category, Product
 from .forms import  UserRegistrationForm
 from django.http import HttpResponse
@@ -18,10 +19,18 @@ from django.core.exceptions import ValidationError
 from .models import Reg
 from django.contrib.auth.decorators import login_required
 
+from django.views.decorators.http import require_GET
 User = get_user_model()
 
 
 
+@require_GET
+def get_likes_count(request, product_id):
+    try:
+        product = Product.objects.get(id=product_id)
+        return JsonResponse({'likes_count': product.users_like.count()})
+    except Product.DoesNotExist:
+        return JsonResponse({'error': 'Product not found'}, status=404)
 
 def product_list(request, category_slug=None):
     category = None
@@ -147,3 +156,31 @@ def user_login(request):
      else:
          form = LoginForm()
      return render(request, 'shop/login.html', {'form': form})
+
+@login_required
+@require_POST
+def prod_like(request):
+    product_id = request.POST.get('id')  # Используем product_id вместо image_id
+    action = request.POST.get('action')
+
+    if not product_id or not action:
+        return JsonResponse({'status': 'error', 'message': 'Missing id or action'}, status=400)
+
+    try:
+        product = Product.objects.get(id=product_id)
+    except Product.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)
+    except ValueError:
+        return JsonResponse({'status': 'error', 'message': 'Invalid product ID'}, status=400)
+
+    if action == 'like':
+        product.users_like.add(request.user)
+    elif action == 'unlike':
+        product.users_like.remove(request.user)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid action'}, status=400)
+
+    return JsonResponse({
+        'status': 'ok',
+        'likes_count': product.users_like.count()  # Ключ совпадает с JS
+    })

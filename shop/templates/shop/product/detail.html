@@ -1,19 +1,134 @@
 {% extends "shop/base.html" %}
 {% load static %}
+
 {% block title %}
- {{ product.name }}
+  {{ product.name }}
 {% endblock %}
+
 {% block content %}
- <div class="product-detail">
- <img src="{% if product.image %}{{ product.image.url }}{% else %}
- {% static 'shop/img/no_image.png' %}{% endif %}">
- <h1>{{ product.name }}</h1>
- <h2>
- <a href="{{ product.category.get_absolute_url }}">
- {{ product.category }}
- </a>
- </h2>
- <p class="price">${{ product.price }}</p>
- {{ product.description|linebreaks }}
- </div>
+<script>
+  const likeUrl = "{% url 'shop:like' %}";
+  const likesCountUrl = "{% url 'shop:likes_count' product.id %}";
+</script>
+
+<div class="product-detail">
+  <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'shop/img/no_image.png' %}{% endif %}" alt="{{ product.name }}">
+  <h1>{{ product.name }}</h1>
+  <h2>
+    <a href="{{ product.category.get_absolute_url }}">{{ product.category }}</a>
+  </h2>
+  <p class="price">${{ product.price }}</p>
+  {{ product.description|linebreaks }}
+</div>
+{% with total_likes=product.users_like.count users_like=product.users_like.all %}
+<form id="like-form" method="post">
+  {% csrf_token %}
+  <div id="likes">
+    <span class="total">{{ total_likes }}</span>
+    <a href="#"
+       id="like-btn"
+       data-id="{{ product.id }}"
+       data-action="{% if request.user in users_like %}unlike{% else %}like{% endif %}"
+       class="like-icon"
+       aria-label="Like button">
+      <svg width="24" height="24" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg"
+           fill="{% if request.user in users_like %}red{% else %}gray{% endif %}">
+        <path d="M219.28949,21.827393c-66.240005,0 -119.999954,53.76001 -119.999954,120
+                 0,134.755524 135.933151,170.08728 228.562454,303.308044
+                 c87.574219,-132.403381 228.5625,-172.854584 228.5625,-303.308044
+                 c0,-66.23999 -53.759888,-120 -120,-120
+                 c-48.047913,0 -89.401611,28.370422 -108.5625,69.1875
+                 c-19.160797,-40.817078 -60.514496,-69.1875 -108.5625,-69.1875z"/>
+      </svg>
+    </a>
+  </div>
+</form>
+{% endwith %}
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const likeButton = document.getElementById('like-btn');
+  const csrftoken = document.querySelector('#like-form input[name="csrfmiddlewaretoken"]').value;
+  const totalLikesElement = document.querySelector('.total');
+  const productId = likeButton.dataset.id;
+
+  async function sendLikeRequest(action) {
+    const response = await fetch("{% url 'shop:like' %}", {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': csrftoken,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        'id': productId,
+        'action': action,
+      }),
+    });
+    return await response.json();
+  }
+
+  function updateLikeUI(action, likesCount) {
+    likeButton.dataset.action = action;
+    const heart = likeButton.querySelector('svg');
+if (action === 'like') {
+    heart.setAttribute('fill', 'gray');
+} else {
+    heart.setAttribute('fill', 'red');
+}
+
+    totalLikesElement.textContent = likesCount;
+  }
+
+  likeButton.addEventListener('click', async function(e) {
+    e.preventDefault();
+    const currentAction = likeButton.dataset.action;
+
+    try {
+      const data = await sendLikeRequest(currentAction);
+      if (data.status === 'ok') {
+        const newAction = currentAction === 'like' ? 'unlike' : 'like';
+        updateLikeUI(newAction, data.likes_count);
+
+        // Сохраняем изменения в localStorage
+        localStorage.setItem(`like-status-${productId}`, JSON.stringify({
+          action: newAction,
+          likes_count: data.likes_count,
+          timestamp: Date.now()
+        }));
+      } else {
+        alert("Ошибка: " + (data.message || 'Неизвестная ошибка'));
+      }
+    } catch (error) {
+      alert("Ошибка запроса: " + error);
+    }
+  });
+
+  // Реакция на изменения в localStorage из других вкладок
+  window.addEventListener('storage', function(e) {
+    if (e.key === `like-status-${productId}` && e.newValue) {
+      const data = JSON.parse(e.newValue);
+      updateLikeUI(data.action, data.likes_count);
+    }
+  });
+
+  // Периодическое обновление счетчика лайков (на всякий случай)
+  function fetchLikesCount() {
+    fetch("{% url 'shop:likes_count' product.id %}")
+      .then(response => response.json())
+      .then(data => {
+        if (data.likes_count !== undefined) {
+          totalLikesElement.textContent = data.likes_count;
+        }
+      })
+      .catch(error => {
+        console.error("Ошибка при получении количества лайков:", error);
+      });
+  }
+
+  setInterval(fetchLikesCount, 100); // обновление каждые 10 сек
+});
+</script>
+
 {% endblock %}

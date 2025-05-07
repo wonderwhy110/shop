@@ -126,3 +126,48 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+const url = likeUrl;
+var csrftoken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+var options = {
+    method: 'POST',
+    headers: {'X-CSRFToken': csrftoken},
+    mode: 'same-origin'
+}
+
+document.getElementById('like-btn').addEventListener('click', async function(e) {
+    e.preventDefault();
+    const likeButton = this;
+
+    try {
+        const response = await fetch(likeUrl, {
+    method: 'POST',
+    headers: {
+        'X-CSRFToken': csrftoken,
+        'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+        'id': likeButton.dataset.id,
+        'action': likeButton.dataset.action,
+    }),
+});
+
+        const data = await response.json();
+
+        if (data.status === 'ok') {
+            // Обновляем текст кнопки
+            const newAction = likeButton.dataset.action === 'like' ? 'unlike' : 'like';
+            likeButton.dataset.action = newAction;
+            likeButton.textContent = newAction === 'like' ? 'Like' : 'Unlike';
+
+            // Обновляем количество лайков
+            document.querySelectorAll('.total-likes, .total').forEach(el => {
+                el.textContent = data.likes_count;
+            });
+        } else {
+            console.error('Error:', data.message || 'Unknown error');
+        }
+    } catch (error) {
+        console.error('Fetch error:', error);
+    }
+});
