@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('post');
     const usernameInput = document.getElementById('id_username');
     const emailInput = document.getElementById('id_email');
@@ -7,12 +7,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const errorEmail = document.getElementById('error-email');
     const errorPassword = document.getElementById('error-password1');
 
-    // Паттерны для валидации
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])/;
     const digitsPattern = /\d/;
 
-    // Валидация имени пользователя
     function validateUsername() {
         const value = usernameInput.value.trim();
         const firstChar = value.charAt(0);
@@ -34,7 +32,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
-    // Валидация email
     function validateEmail() {
         const value = emailInput.value.trim();
 
@@ -51,7 +48,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
-    // Валидация пароля
     function validatePassword() {
         const value = passwordInput.value;
 
@@ -64,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
         if (!passwordPattern.test(value)) {
-            showError(passwordInput, errorPassword, 'Пароль должен содержать буквы, цифры и специальные символы (!@#$%^&*)');
+            showError(passwordInput, errorPassword, 'Пароль должен содержать буквы, цифры и спецсимволы (!@#$%^&*)');
             return false;
         }
 
@@ -72,7 +68,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
-    // Вспомогательные функции
     function showError(input, errorElement, message) {
         input.classList.add('invalid');
         errorElement.textContent = message;
@@ -83,91 +78,32 @@ document.addEventListener('DOMContentLoaded', function() {
         errorElement.textContent = '';
     }
 
-    // Обработчики событий
     usernameInput.addEventListener('blur', validateUsername);
     emailInput.addEventListener('blur', validateEmail);
     passwordInput.addEventListener('blur', validatePassword);
 
-    usernameInput.addEventListener('focus', function() {
-        if (this.classList.contains('invalid')) {
-            hideError(this, errorUsername);
-        }
+    usernameInput.addEventListener('focus', () => {
+        if (usernameInput.classList.contains('invalid')) hideError(usernameInput, errorUsername);
     });
 
-    emailInput.addEventListener('focus', function() {
-        if (this.classList.contains('invalid')) {
-            hideError(this, errorEmail);
-        }
+    emailInput.addEventListener('focus', () => {
+        if (emailInput.classList.contains('invalid')) hideError(emailInput, errorEmail);
     });
 
-    passwordInput.addEventListener('focus', function() {
-        if (this.classList.contains('invalid')) {
-            hideError(this, errorPassword);
-        }
+    passwordInput.addEventListener('focus', () => {
+        if (passwordInput.classList.contains('invalid')) hideError(passwordInput, errorPassword);
     });
 
-    // Валидация при отправке формы
-    form.addEventListener('submit', function(event) {
+    form.addEventListener('submit', function (event) {
         const isUsernameValid = validateUsername();
         const isEmailValid = validateEmail();
         const isPasswordValid = validatePassword();
 
         if (!isUsernameValid || !isEmailValid || !isPasswordValid) {
             event.preventDefault();
-
-            // Прокрутка к первой ошибке
-            if (!isUsernameValid) {
-                usernameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            } else if (!isEmailValid) {
-                emailInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            } else {
-                passwordInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
+            if (!isUsernameValid) usernameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            else if (!isEmailValid) emailInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            else passwordInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     });
-});
-
-const url = likeUrl;
-var csrftoken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
-var options = {
-    method: 'POST',
-    headers: {'X-CSRFToken': csrftoken},
-    mode: 'same-origin'
-}
-
-document.getElementById('like-btn').addEventListener('click', async function(e) {
-    e.preventDefault();
-    const likeButton = this;
-
-    try {
-        const response = await fetch(likeUrl, {
-    method: 'POST',
-    headers: {
-        'X-CSRFToken': csrftoken,
-        'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: new URLSearchParams({
-        'id': likeButton.dataset.id,
-        'action': likeButton.dataset.action,
-    }),
-});
-
-        const data = await response.json();
-
-        if (data.status === 'ok') {
-            // Обновляем текст кнопки
-            const newAction = likeButton.dataset.action === 'like' ? 'unlike' : 'like';
-            likeButton.dataset.action = newAction;
-            likeButton.textContent = newAction === 'like' ? 'Like' : 'Unlike';
-
-            // Обновляем количество лайков
-            document.querySelectorAll('.total-likes, .total').forEach(el => {
-                el.textContent = data.likes_count;
-            });
-        } else {
-            console.error('Error:', data.message || 'Unknown error');
-        }
-    } catch (error) {
-        console.error('Fetch error:', error);
-    }
 });
